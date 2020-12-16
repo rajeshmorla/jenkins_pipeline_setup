@@ -8,10 +8,25 @@ pipeline {
     }
 
     stage('Is Run Required ?') {
-      steps {
-        echo 'Checking condition'
-        readFile 'Build.json'
-        writeFile(file: 'QA', text: 'hello')
+      parallel {
+        stage('Is Run Required ?') {
+          steps {
+            echo 'Checking condition'
+            readFile 'Build.json'
+            writeFile(file: 'QA', text: 'hello')
+            waitUntil(initialRecurrencePeriod: 3) {
+              echo 'hello'
+            }
+
+          }
+        }
+
+        stage('hiii') {
+          steps {
+            echo 'hiii'
+          }
+        }
+
       }
     }
 
