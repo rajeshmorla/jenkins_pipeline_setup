@@ -10,6 +10,8 @@ pipeline {
     stage('Is Run Required ?') {
       steps {
         echo 'Checking condition'
+        readFile 'Build.json'
+        writeFile(file: 'QA', text: 'hello')
       }
     }
 
