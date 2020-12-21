@@ -1,55 +1,47 @@
 pipeline {
-  agent any
-  stages {
-    stage('Git Pull') {
-      steps {
-        git(url: 'https://github.com/rajeshmorla/jenkins_pipeline_setup.git', branch: 'master')
-      }
-    }
-
-    stage('Is Run Required ?') {
-      when {
-        expression {
-          params.RUN_REQUIRED
+    agent none
+    stages {
+        stage('Non-Sequential Stage') {
+            agent {
+                label 'for-non-sequential'
+            }
+            steps {
+                echo "On Non-Sequential Stage"
+            }
         }
-
-      }
-      steps {
-        echo 'Hello'
-      }
-    }
-
-    stage('Quality') {
-      parallel {
-        stage('Quality') {
-          steps {
-            echo 'QA'
-          }
+        stage('Sequential') {
+            agent {
+                label 'for-sequential'
+            }
+            environment {
+                FOR_SEQUENTIAL = "some-value"
+            }
+            stages {
+                stage('In Sequential 1') {
+                    steps {
+                        echo "In Sequential 1"
+                    }
+                }
+                stage('In Sequential 2') {
+                    steps {
+                        echo "In Sequential 2"
+                    }
+                }
+                stage('Parallel In Sequential') {
+                    parallel {
+                        stage('In Parallel 1') {
+                            steps {
+                                echo "In Parallel 1"
+                            }
+                        }
+                        stage('In Parallel 2') {
+                            steps {
+                                echo "In Parallel 2"
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-        stage('Unit Test') {
-          steps {
-            echo 'unit test'
-          }
-        }
-
-      }
     }
-
-    stage('Summary') {
-      steps {
-        echo 'summary'
-        echo 'hi'
-      }
-    }
-
-  }
-  parameters {
-    booleanParam(name: 'RUN_REQUIRED', defaultValue: false)
-    booleanParam(name: 'STATIC_CHECK', defaultValue: true)
-    booleanParam(name: 'QA', defaultValue: true)
-    booleanParam(name: 'UNIT_TEST', defaultValue: true)
-    string(name: 'SUCCESS_EMAIL', defaultValue: 'rajeshmorla@live.com')
-    string(name: 'FAILURE_EMAIL', defaultValue: 'rajeshmorla@live.com')
-  }
 }
