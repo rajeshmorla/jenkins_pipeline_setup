@@ -20,12 +20,7 @@ pipeline {
                         echo "On Branch A"
                     }
                 }
-                stage('Branch B') {
-                    agent any
-                    steps {
-                        echo "On Branch B"
-                    }
-                }
+
                 stage('Branch C') {
                     agent any
                     stages {
