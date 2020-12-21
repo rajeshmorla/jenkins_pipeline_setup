@@ -39,6 +39,7 @@ pipeline {
     stage('Summary') {
       steps {
         echo 'summary'
+        echo 'hi'
       }
     }
 
