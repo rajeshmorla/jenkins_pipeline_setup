@@ -1,48 +1,44 @@
 pipeline {
-    agent none
+    agent any
+    options {
+        parallelsAlwaysFailFast()
+    }
     stages {
-        stage('Non-Sequential Stage') {
-            agent any
+        stage('Non-Parallel Stage') {
             steps {
-                echo "On Non-Sequential Stage"
+                echo 'This stage will be executed first.'
             }
         }
-        stage('Sequential') {
-            agent any
-            environment {
-                FOR_SEQUENTIAL = "some-value"
+        stage('Parallel Stage') {
+            when {
+                branch 'master'
             }
-            stages {
-                stage('In Sequential 1') {
+            parallel {
+                stage('Branch A') {
+                    agent any
                     steps {
-                        echo "In Sequential 1"
+                        echo "On Branch A"
                     }
                 }
-                stage('In Sequential 2') {
+                stage('Branch B') {
+                    agent any
                     steps {
-                        echo "In Sequential 2"
+                        echo "On Branch B"
                     }
                 }
-                stage('Parallel In Sequential') {
-                     stages {
-                        stage('In Sequential 1') {
+                stage('Branch C') {
+                    agent any
+                    stages {
+                        stage('Nested 1') {
                             steps {
-                                echo "In Sequential 1"
+                                echo "In stage Nested 1 within Branch C"
                             }
                         }
-                        stage('In Sequential 2') {
+                        stage('Nested 2') {
                             steps {
-                                echo "In Sequential 2"
+                                echo "In stage Nested 2 within Branch C"
                             }
                         }
-                     }
-                    parallel {
-                        stage('In Parallel 1') {
-                            steps {
-                                echo "In Parallel 1"
-                            }
-                        }
-                        
                     }
                 }
             }
