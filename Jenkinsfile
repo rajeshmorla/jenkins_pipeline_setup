@@ -15,7 +15,30 @@ pipeline {
 
       }
       steps {
-        echo 'Run is required, further stages should execute!'
+        echo 'Hello'
+      }
+    }
+
+    stage('Quality') {
+      parallel {
+        stage('Quality') {
+          steps {
+            echo 'QA'
+          }
+        }
+
+        stage('Unit Test') {
+          steps {
+            echo 'unit test'
+          }
+        }
+
+      }
+    }
+
+    stage('Summary') {
+      steps {
+        echo 'summary'
       }
     }
 
