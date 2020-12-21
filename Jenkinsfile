@@ -81,7 +81,6 @@ pipeline {
       }
       parallel {
         stage('Quality Check') {
-            agent any
             stages {
               stage('Statick Check') {
                 when {
@@ -129,7 +128,6 @@ pipeline {
             }
         }
         stage('Unit Test') {
-            agent any
             when {
               expression {
                 params.UNIT_TEST
